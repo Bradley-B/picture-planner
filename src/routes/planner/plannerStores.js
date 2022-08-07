@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export const SIZE_MULTIPLIER = 20;
+export const FRAME_SIZE_MULTIPLIER = 20;
 
 export const FRAME_SIZES = [
   [5, 7],
@@ -14,8 +14,8 @@ const getNewFrameObject = (store) => {
   return {
     id: maxId + 1,
     zIndex: maxZIndex + 1,
-    width: SIZE_MULTIPLIER * FRAME_SIZES[0][0],
-    height: SIZE_MULTIPLIER * FRAME_SIZES[0][1]
+    width: FRAME_SIZE_MULTIPLIER * FRAME_SIZES[0][0],
+    height: FRAME_SIZE_MULTIPLIER * FRAME_SIZES[0][1]
   };
 };
 

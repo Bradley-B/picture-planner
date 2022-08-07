@@ -6,7 +6,7 @@
         position: absolute;
         cursor: grab;
         border: solid red 5px;
-        box-sizing: border-box;
+        /*box-sizing: border-box;*/
 
         background-color: var(--color);
         z-index: var(--zIndex);
@@ -34,7 +34,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { SIZE_MULTIPLIER } from './plannerStores.js';
+  import { FRAME_SIZE_MULTIPLIER } from './plannerStores.js';
 
   let frame;
   let animating = false;
@@ -110,7 +110,7 @@
     destTop: 0,
   };
 
-  const innerText = `${width/SIZE_MULTIPLIER}x${height/SIZE_MULTIPLIER}`;
+  const innerText = `${width/FRAME_SIZE_MULTIPLIER}x${height/FRAME_SIZE_MULTIPLIER}`;
 
   $: allStyles = { ...styles, ...animationStyles, zIndex, width: width + 'px', height: height + 'px' };
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');
