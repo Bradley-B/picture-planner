@@ -7,10 +7,13 @@
       display: grid;
       place-items: center;
   }
-  img {
+  svg {
       user-select: none;
-      max-width: 90%;
-      max-height: 90vh;
+      position: absolute;
+      top: 2.5%;
+      left: 2.5%;
+      width: 95%;
+      height: 95%;
   }
 </style>
 
@@ -23,11 +26,26 @@
     framesById.recalculateZIndexes();
   };
 
+  const frameLocations = {};
+  const onFrameMove = (id, frameLocation) => {
+    frameLocations[id] = frameLocation;
+  };
+
 </script>
 
 <div id="mat">
-  <img src="testimage.jpg" alt="planning">
+  <svg width="2484" height="1398" viewBox="0 0 2484 1398">
+    <image width="100%" height="100%" xlink:href="testimage.jpg" mask="url(#hole)"/>
+    <defs>
+      <mask id="hole">
+        <rect width="100%" height="100%" fill="white"/>
+<!--        <rect x="40" y="40" height="10" width="10" rx="1" fill="black"/>-->
+<!--        <rect x="0" y="0" height="10" width="10" rx="1" fill="black"/>-->
+      </mask>
+    </defs>
+  </svg>
+
   {#each Object.values($framesById) as frame (frame.id)}
-    <Frame id={frame.id} zIndex={frame.zIndex} onPickup={moveFrameToTop}/>
+    <Frame id={frame.id} zIndex={frame.zIndex} onPickup={moveFrameToTop} onMove={onFrameMove}/>
   {/each}
 </div>

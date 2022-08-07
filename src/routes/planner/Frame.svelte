@@ -33,6 +33,9 @@
 </style>
 
 <script>
+  import { onMount } from 'svelte';
+  import { SIZE_MULTIPLIER } from './plannerStores.js';
+
   let frame;
   let animating = false;
 
@@ -41,8 +44,12 @@
   export let onMove = () => {};
   export let zIndex = 1;
   export let id = 1;
-  export let width = '100px';
-  export let height = '140px';
+  export let width = 100;
+  export let height = 140;
+
+  onMount(() => {
+    onMove(id, frame.getBoundingClientRect());
+  });
 
   const onMouseDown = (mouseDownEvent) => {
     if (animating) return false;
@@ -56,7 +63,7 @@
     const shiftY = mouseDownEvent.clientY - parseInt(styles.top);
 
     const onMouseMove = (mouseMoveEvent) => {
-      onMove(mouseMoveEvent.clientX, mouseMoveEvent.clientY);
+      onMove(id, frame.getBoundingClientRect());
       styles.opacity = 0.5;
       styles.left = mouseMoveEvent.pageX - shiftX + 'px';
       styles.top = mouseMoveEvent.pageY - shiftY + 'px';
@@ -91,8 +98,6 @@
   }
 
   const styles = {
-    translateX: 0,
-    translateY: 0,
     left: 0,
     top: 0,
     opacity: 1.0,
@@ -105,7 +110,9 @@
     destTop: 0,
   };
 
-  $: allStyles = { ...styles, ...animationStyles, zIndex, width, height };
+  const innerText = `${width/SIZE_MULTIPLIER}x${height/SIZE_MULTIPLIER}`;
+
+  $: allStyles = { ...styles, ...animationStyles, zIndex, width: width + 'px', height: height + 'px' };
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');
 
 </script>
@@ -117,5 +124,5 @@
     style={cssVariables}
     on:mousedown={onMouseDown}
 >
-  <span style="user-select: none; background-color: white">5x7</span>
+  <span style="user-select: none; background-color: white">{innerText}</span>
 </div>

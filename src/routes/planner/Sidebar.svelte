@@ -5,6 +5,8 @@
         justify-content: flex-end;
     }
     #open-button {
+        height: 87px;
+        width: 70px;
         user-select: none;
         background-color: transparent;
         border: none;
@@ -16,7 +18,6 @@
     }
     #open-button:active {
         border: 1px solid black;
-        margin: -1px;
     }
 
     #sidebar {
@@ -43,7 +44,7 @@
 
 <div id="sidebar">
   <div id="open-button-wrapper">
-    <button id="open-button" on:click={() => { isNavOpen = !isNavOpen; }}>☰</button>
+    <button id="open-button" on:click={() => { isNavOpen = !isNavOpen; }}>{ isNavOpen ? 'X' : '☰' }</button>
   </div>
   {#if isNavOpen}
     <div id="sidebar-body" transition:slide={{ duration: 500 }}>
