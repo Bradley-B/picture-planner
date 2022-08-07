@@ -1,11 +1,11 @@
 <!--suppress CssUnresolvedCustomProperty -->
 <style>
     .frame {
-        width: 150px;
-        height: 200px;
+        width: var(--width);
+        height: var(--height);
         position: absolute;
         cursor: grab;
-        border: solid red 10px;
+        border: solid red 5px;
         box-sizing: border-box;
 
         background-color: var(--color);
@@ -13,8 +13,9 @@
         transform: translateX(var(--left)) translateY(var(--top));
         opacity: var(--opacity);
 
-        display: grid;
-        place-items: center;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
     }
 
     @keyframes snap-back {
@@ -38,9 +39,10 @@
   export let onDrop = () => true;
   export let onPickup = () => {};
   export let onMove = () => {};
-  export let color = 'transparent';
   export let zIndex = 1;
   export let id = 1;
+  export let width = '100px';
+  export let height = '140px';
 
   const onMouseDown = (mouseDownEvent) => {
     if (animating) return false;
@@ -103,7 +105,7 @@
     destTop: 0,
   };
 
-  $: allStyles = { ...styles, ...animationStyles, color, zIndex };
+  $: allStyles = { ...styles, ...animationStyles, zIndex, width, height };
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');
 
 </script>
@@ -115,4 +117,5 @@
     style={cssVariables}
     on:mousedown={onMouseDown}
 >
+  <span style="user-select: none; background-color: white">5x7</span>
 </div>

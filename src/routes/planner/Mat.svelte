@@ -1,30 +1,35 @@
 <style>
   #mat {
+      height: 100%;
+      width: 90%;
       position: relative;
       isolation: isolate;
+      display: grid;
+      place-items: center;
+  }
+  img {
+      user-select: none;
+      max-width: 100%;
+      max-height: 100%;
   }
 </style>
 
 <script>
   import Frame from './Frame.svelte';
-
-  let frames = [
-    { id: 1, zIndex: 1 },
-    { id: 2, zIndex: 2 },
-    { id: 3, zIndex: 3 }
-  ];
+  import { framesById } from './plannerStores.js';
 
   const moveFrameToTop = id => {
-    frames.find(frame => frame.id === id).zIndex = frames.length + 1;
-    frames = frames
-      .sort((a, b) => a.zIndex - b.zIndex)
-      .map((e, i) => ({ ...e, zIndex: i }));
+    framesById.updateFrame({ id, zIndex: Object.keys($framesById).length + 1});
+    framesById.recalculateZIndexes();
   };
 
 </script>
 
 <div id="mat">
-  {#each frames as { id, zIndex } (id)}
-    <Frame id={id} zIndex={zIndex} onPickup={moveFrameToTop}/>
+  <img src="testimage.jpg" alt="planning">
+  {#each Object.values($framesById) as frame (frame.id)}
+    <Frame id={frame.id} zIndex={frame.zIndex} onPickup={moveFrameToTop}/>
   {/each}
 </div>
+
+<button on:click={() => framesById.addFrame()}>add frame</button>
