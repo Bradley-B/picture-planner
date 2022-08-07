@@ -3,7 +3,7 @@
       width: 100vw;
       height: 100vh;
       display: grid;
-      place-items: center;
+      grid-template-columns: auto min-content;
       background-color: #bff5bf;
       overflow: hidden;
   }
@@ -11,8 +11,10 @@
 
 <script>
   import Mat from './Mat.svelte';
+  import Sidebar from './Sidebar.svelte';
 </script>
 
 <div id="planner-page">
   <Mat />
+  <Sidebar />
 </div>

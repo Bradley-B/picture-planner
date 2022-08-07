@@ -1,7 +1,7 @@
 <style>
   #mat {
       height: 100%;
-      width: 90%;
+      width: 100%;
       position: relative;
       isolation: isolate;
       display: grid;
@@ -9,8 +9,8 @@
   }
   img {
       user-select: none;
-      max-width: 100%;
-      max-height: 100%;
+      max-width: 90%;
+      max-height: 90vh;
   }
 </style>
 
@@ -19,7 +19,7 @@
   import { framesById } from './plannerStores.js';
 
   const moveFrameToTop = id => {
-    framesById.updateFrame({ id, zIndex: Object.keys($framesById).length + 1});
+    framesById.updateFrame({ id, zIndex: Object.keys($framesById).length + 1 });
     framesById.recalculateZIndexes();
   };
 
@@ -31,5 +31,3 @@
     <Frame id={frame.id} zIndex={frame.zIndex} onPickup={moveFrameToTop}/>
   {/each}
 </div>
-
-<button on:click={() => framesById.addFrame()}>add frame</button>
