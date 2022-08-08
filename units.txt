@@ -1,0 +1,25 @@
+One thing that makes this project tricky is converting between all the different units.
+
+We want to know real-world inches to display to the user, but we need everything in pixels to determine where items are on the screen.
+
+We also need to convert to and from magic svg viewBox units, since we scale the svg image to the user screen size.
+
+I'm going to put some notes here to remind myself how the conversion works in different places.
+
+------
+
+plannerStores.js:
+	PIXELS_PER_INCH stores pixels per inch. 1/PIXELS_PER_INCH is inches per pixel.
+	Frame sizes are stored in pixels in the frame store, but sizes from FRAME_SIZES are in inches.
+	When we add a new frame object, it's converted to pixels by multiplying by PIXELS_PER_INCH.
+
+Frame.svelte:
+	We want to display the frame size to the user, so we basically just undo the multiplication that we did in order to convert from inches to pixels.
+
+Mat.svelte: 
+	When we add mask rects to the svg, the coordinates are converted to viewBox units.
+	To do this, we get a scale factor for the ratio of pixels in the source image to the pixels actually displayed (viewBox pixels per real pixel).
+	We can multiply this scale factor by real pixels to get viewbox pixels.
+		proof: (viewBoxPixel/realPixel) * realPixel = viewBoxPixel
+
+To display the background image dimensions in pixels, multiply its pixels by 1/PIXELS_PER_INCH.
