@@ -5,8 +5,7 @@
         height: var(--height);
         position: absolute;
         cursor: grab;
-        border: solid red 5px;
-        /*box-sizing: border-box;*/
+        border: solid red 5px; /* TODO figure out if having a border negatively affects background image size calculation */
 
         background-color: var(--color);
         z-index: var(--zIndex);
