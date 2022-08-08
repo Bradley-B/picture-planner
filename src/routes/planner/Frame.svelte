@@ -34,7 +34,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { FRAME_SIZE_MULTIPLIER } from './plannerStores.js';
+  import { PIXELS_PER_INCH } from './plannerStores.js';
 
   let frame;
   let animating = false;
@@ -48,7 +48,7 @@
   export let height = 140;
 
   onMount(() => {
-    onMove(id, frame.getBoundingClientRect());
+    onMove(id);
   });
 
   const onMouseDown = (mouseDownEvent) => {
@@ -63,7 +63,7 @@
     const shiftY = mouseDownEvent.clientY - parseInt(styles.top);
 
     const onMouseMove = (mouseMoveEvent) => {
-      onMove(id, frame.getBoundingClientRect());
+      onMove(id);
       styles.opacity = 0.5;
       styles.left = mouseMoveEvent.pageX - shiftX + 'px';
       styles.top = mouseMoveEvent.pageY - shiftY + 'px';
@@ -79,6 +79,7 @@
 
     const onMouseUp = (mouseUpEvent) => {
       styles.opacity = 1.0;
+      onMove(id);
       const legalPlay = onDrop(mouseUpEvent.clientX, mouseUpEvent.clientY);
 
       if (!legalPlay) {
@@ -110,7 +111,7 @@
     destTop: 0,
   };
 
-  const innerText = `${width/FRAME_SIZE_MULTIPLIER}x${height/FRAME_SIZE_MULTIPLIER}`;
+  const frameSize = `${width/PIXELS_PER_INCH}x${height/PIXELS_PER_INCH}`; // convert to inches
 
   $: allStyles = { ...styles, ...animationStyles, zIndex, width: width + 'px', height: height + 'px' };
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');
@@ -120,9 +121,10 @@
 <div
     bind:this={frame}
     class="frame"
+    id="frame-{id}"
     class:snap-back={animating}
     style={cssVariables}
     on:mousedown={onMouseDown}
 >
-  <span style="user-select: none; background-color: white">{innerText}</span>
+  <span style="user-select: none; background-color: white">{frameSize}</span>
 </div>

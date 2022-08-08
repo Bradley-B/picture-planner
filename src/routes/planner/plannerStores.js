@@ -1,7 +1,8 @@
 import { writable } from 'svelte/store';
 
-export const FRAME_SIZE_MULTIPLIER = 20;
+export const PIXELS_PER_INCH = 20;
 
+// frame sizes, in inches
 export const FRAME_SIZES = [
   [5, 7],
   [8.25, 11.75],
@@ -14,8 +15,8 @@ const getNewFrameObject = (store) => {
   return {
     id: maxId + 1,
     zIndex: maxZIndex + 1,
-    width: FRAME_SIZE_MULTIPLIER * FRAME_SIZES[0][0],
-    height: FRAME_SIZE_MULTIPLIER * FRAME_SIZES[0][1]
+    width: PIXELS_PER_INCH * FRAME_SIZES[0][0], // width is in pixels
+    height: PIXELS_PER_INCH * FRAME_SIZES[0][1] // height is in pixels
   };
 };
 
