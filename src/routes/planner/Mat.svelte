@@ -25,7 +25,7 @@
   import Frame from './Frame.svelte';
   import { framesById } from './plannerStores.js';
   import { onMount } from 'svelte';
-  import { updateMaskLayer, updateAllMaskLayers } from './svgDomFunctions.js';
+  import { updateAllMaskLayers } from './svgDomFunctions.js';
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
@@ -67,7 +67,6 @@
         height={frame.height}
         width={frame.width}
         onPickup={moveFrameToTop}
-        onMove={updateMaskLayer}
     />
   {/each}
 </div>

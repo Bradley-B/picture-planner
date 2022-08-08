@@ -6,15 +6,15 @@
         position: absolute;
         cursor: grab;
         border: solid red 5px; /* TODO figure out if having a border negatively affects background image size calculation */
+        user-select: none;
 
-        background-color: var(--color);
         z-index: var(--zIndex);
         transform: translateX(var(--left)) translateY(var(--top));
         opacity: var(--opacity);
 
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
+        display: grid;
+        grid-template-rows: min-content min-content auto min-content;
+        grid-template-columns: auto min-content;
     }
 
     @keyframes snap-back {
@@ -29,25 +29,57 @@
     .snap-back {
         animation: snap-back 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
+    .frame button {
+        visibility: hidden;
+        font-size: x-large;
+        font-weight: 1000;
+        cursor: pointer;
+        grid-column: 2;
+        background: none;
+        border: none;
+        color: red;
+    }
+
+    .frame button:active {
+        border: 1px solid black;
+    }
+
+    .frame button:hover {
+        background-color: #c7c7c7;
+    }
+
+    .frame span {
+        visibility: hidden;
+        grid-row: 4;
+        width: fit-content;
+        height: fit-content;
+        background-color: white;
+    }
+
+    .frame:hover button, .frame:hover span {
+        visibility: visible;
+    }
 </style>
 
 <script>
   import { onMount } from 'svelte';
-  import { PIXELS_PER_INCH } from './plannerStores.js';
+  import { framesById, PIXELS_PER_INCH } from './plannerStores.js';
+  import { removeMaskLayer, updateMaskLayer } from './svgDomFunctions.js';
 
   let frame;
   let animating = false;
 
   export let onDrop = () => true;
   export let onPickup = () => {};
-  export let onMove = () => {};
+
   export let zIndex = 1;
   export let id = 1;
   export let width = 100;
   export let height = 140;
 
   onMount(() => {
-    onMove(id);
+    updateMaskLayer(id);
   });
 
   const onMouseDown = (mouseDownEvent) => {
@@ -62,7 +94,7 @@
     const shiftY = mouseDownEvent.clientY - parseInt(styles.top);
 
     const onMouseMove = (mouseMoveEvent) => {
-      onMove(id);
+      updateMaskLayer(id);
       styles.opacity = 0.5;
       styles.left = mouseMoveEvent.pageX - shiftX + 'px';
       styles.top = mouseMoveEvent.pageY - shiftY + 'px';
@@ -78,7 +110,7 @@
 
     const onMouseUp = (mouseUpEvent) => {
       styles.opacity = 1.0;
-      onMove(id);
+      updateMaskLayer(id);
       const legalPlay = onDrop(mouseUpEvent.clientX, mouseUpEvent.clientY);
 
       if (!legalPlay) {
@@ -97,6 +129,18 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
+  const onRotateClick = () => {
+    framesById.updateFrame({ id, width: height, height: width });
+    requestAnimationFrame(() => {
+      updateMaskLayer(id);
+    });
+  };
+
+  const onCloseClick = () => {
+    framesById.removeFrame(id);
+    removeMaskLayer(id);
+  }
+
   const styles = {
     left: 0,
     top: 0,
@@ -110,7 +154,7 @@
     destTop: 0,
   };
 
-  const frameSize = `${width/PIXELS_PER_INCH}x${height/PIXELS_PER_INCH}`; // convert to inches
+  $: frameSize = `${width/PIXELS_PER_INCH}x${height/PIXELS_PER_INCH}`; // convert to inches
 
   $: allStyles = { ...styles, ...animationStyles, zIndex, width: width + 'px', height: height + 'px' };
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');
@@ -125,5 +169,7 @@
     style={cssVariables}
     on:mousedown={onMouseDown}
 >
-  <span style="user-select: none; background-color: white">{frameSize}</span>
+  <button on:click={onCloseClick}>x</button>
+  <button on:click={onRotateClick}>⟳</button>
+  <span>{frameSize}</span>
 </div>
