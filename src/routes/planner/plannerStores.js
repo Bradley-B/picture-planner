@@ -4,14 +4,14 @@ import { updateAllMaskLayers } from './svgDomFunctions.js';
 export const PIXELS_PER_INCH = 20;
 
 // frame sizes, in inches
-export const FRAME_SIZES = [
+export const INITIAL_FRAME_SIZES = [
   [5, 7],
   [8.25, 11.75],
   [11, 14],
 ];
 
 const createSettingsStore = () => {
-  return writable({ isMaskEnabled: false });
+  return writable({ isMaskEnabled: false, frameSizes: INITIAL_FRAME_SIZES });
 };
 
 const createImageDetailsStore = () => {
@@ -45,14 +45,14 @@ const createImageDetailsStore = () => {
   }
 };
 
-const getNewFrameObject = (store) => {
+const getNewFrameObject = (store, selectedFrameSize) => {
   const maxId = Math.max(...[0, ...Object.values(store).map(frame => frame.id)]);
   const maxZIndex = Math.max(...[0, ...Object.values(store).map(frame => frame.zIndex)]);
   return {
     id: maxId + 1,
     zIndex: maxZIndex + 1,
-    width: PIXELS_PER_INCH * FRAME_SIZES[0][0], // width is in pixels
-    height: PIXELS_PER_INCH * FRAME_SIZES[0][1] // height is in pixels
+    width: PIXELS_PER_INCH * selectedFrameSize[0], // width is in pixels
+    height: PIXELS_PER_INCH * selectedFrameSize[1] // height is in pixels
   };
 };
 
@@ -64,8 +64,8 @@ const createFramesByIdStore = () => {
     subscribe,
     reset: () => set(initialState),
 
-    addFrame: () => update(store => {
-      const newFrame = getNewFrameObject(store);
+    addFrame: selectedFrameSize => update(store => {
+      const newFrame = getNewFrameObject(store, selectedFrameSize);
       store[newFrame.id] = newFrame;
       return store;
     }),

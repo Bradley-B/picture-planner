@@ -44,6 +44,7 @@
   import { slide } from '../../lib/transitions.js';
 
   let isNavOpen = true;
+  let selectedFrameSize;
 
   const onFileSelect = event => {
     imageDetails.replaceImage(event.target.files[0]);
@@ -55,11 +56,22 @@
   <div id="open-button-wrapper">
     <button id="open-button" on:click={() => { isNavOpen = !isNavOpen; }}>{ isNavOpen ? 'X' : '☰' }</button>
   </div>
+
   {#if isNavOpen}
     <div id="sidebar-body" transition:slide={{ duration: 500 }}>
+
       <label><input type="checkbox" bind:checked={$settings.isMaskEnabled}>Toggle Mask</label><br/>
       <input type="file" on:change={onFileSelect}>
-      <button on:click={() => framesById.addFrame()}>add frame</button>
+      <button on:click={() => framesById.addFrame(selectedFrameSize)}>add frame</button>
+
+      <select bind:value={selectedFrameSize}>
+        {#each $settings.frameSizes as frameSize}
+          <option value={frameSize}>
+            {frameSize[0]}"x{frameSize[1]}"
+          </option>
+        {/each}
+      </select>
+
     </div>
   {/if}
 </div>
