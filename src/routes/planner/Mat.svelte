@@ -23,13 +23,17 @@
 
 <script>
   import Frame from './Frame.svelte';
-  import { framesById } from './plannerStores.js';
+  import { imageDetails, framesById } from './plannerStores.js';
   import { onMount } from 'svelte';
   import { updateAllMaskLayers } from './svgDomFunctions.js';
 
+  $: src = $imageDetails.src;
+  $: width = $imageDetails.width;
+  $: height = $imageDetails.height;
+
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
-      updateAllMaskLayers();
+      updateAllMaskLayers($imageDetails);
     });
     resizeObserver.observe(document.getElementById('svg-wrapper'));
   });
@@ -43,13 +47,13 @@
 
 <div id="mat">
   <div id="svg-wrapper">
-    <svg width="2484" height="1398" viewBox="0 0 2484 1398">
+    <svg width="{width}" height="{height}" viewBox="0 0 {width} {height}">
       <image
           xmlns="http://www.w3.org/2000/svg"
           id="svg-image"
           width="100%"
           height="100%"
-          xlink:href="testimage.jpg"
+          xlink:href="{src}"
           mask="url(#svg-image-mask)"
       />
       <defs>

@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { updateAllMaskLayers } from './svgDomFunctions.js';
 
 export const PIXELS_PER_INCH = 20;
 
@@ -8,6 +9,37 @@ export const FRAME_SIZES = [
   [8.25, 11.75],
   [11, 14],
 ];
+
+const createImageDetailsStore = () => {
+  const { subscribe, update } = writable({ width: 2484, height: 1398, src: 'default-image.jpg' });
+
+  const updateStoreWithImage = image => {
+    update(store => {
+      store.src = image.src;
+      store.width = image.width;
+      store.height = image.height;
+      requestAnimationFrame(() => {
+        updateAllMaskLayers(store);
+      })
+      return store;
+    });
+  };
+
+  return {
+    subscribe,
+    replaceImage: newFile => {
+      let fileReader = new FileReader();
+      const fileReaderLoad = () => {
+        let image = new Image();
+        image.onload = () => updateStoreWithImage(image);
+        image.src = fileReader.result;
+        fileReader.removeEventListener('load', fileReaderLoad);
+      };
+      fileReader.addEventListener('load', fileReaderLoad);
+      fileReader.readAsDataURL(newFile);
+    },
+  }
+};
 
 const getNewFrameObject = (store) => {
   const maxId = Math.max(...[0, ...Object.values(store).map(frame => frame.id)]);
@@ -54,3 +86,4 @@ const createFramesByIdStore = () => {
 };
 
 export const framesById = createFramesByIdStore();
+export const imageDetails = createImageDetailsStore();

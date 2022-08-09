@@ -64,7 +64,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { framesById, PIXELS_PER_INCH } from './plannerStores.js';
+  import { imageDetails, framesById, PIXELS_PER_INCH } from './plannerStores.js';
   import { removeMaskLayer, updateMaskLayer } from './svgDomFunctions.js';
 
   let frame;
@@ -79,7 +79,7 @@
   export let height = 140;
 
   onMount(() => {
-    updateMaskLayer(id);
+    updateMaskLayer(id, $imageDetails);
   });
 
   const onMouseDown = (mouseDownEvent) => {
@@ -94,7 +94,7 @@
     const shiftY = mouseDownEvent.clientY - parseInt(styles.top);
 
     const onMouseMove = (mouseMoveEvent) => {
-      updateMaskLayer(id);
+      updateMaskLayer(id, $imageDetails);
       styles.opacity = 0.5;
       styles.left = mouseMoveEvent.pageX - shiftX + 'px';
       styles.top = mouseMoveEvent.pageY - shiftY + 'px';
@@ -110,7 +110,7 @@
 
     const onMouseUp = (mouseUpEvent) => {
       styles.opacity = 1.0;
-      updateMaskLayer(id);
+      updateMaskLayer(id, $imageDetails);
       const legalPlay = onDrop(mouseUpEvent.clientX, mouseUpEvent.clientY);
 
       if (!legalPlay) {
@@ -132,7 +132,7 @@
   const onRotateClick = () => {
     framesById.updateFrame({ id, width: height, height: width });
     requestAnimationFrame(() => {
-      updateMaskLayer(id);
+      updateMaskLayer(id, $imageDetails);
     });
   };
 

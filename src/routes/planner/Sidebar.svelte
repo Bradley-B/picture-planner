@@ -28,7 +28,7 @@
         grid-template-rows: min-content 10px auto;
     }
     #sidebar-body {
-        width: 200px;
+        width: 300px;
         height: 100%;
         margin-left: auto !important;
         grid-area: 3;
@@ -36,10 +36,15 @@
 </style>
 
 <script>
-  import { framesById } from './plannerStores.js';
+  import { imageDetails, framesById } from './plannerStores.js';
   import { slide } from '../../lib/transitions.js';
 
-  let isNavOpen = false;
+  let isNavOpen = true;
+
+  const onFileSelect = event => {
+    imageDetails.replaceImage(event.target.files[0]);
+  };
+
 </script>
 
 <div id="sidebar">
@@ -48,6 +53,7 @@
   </div>
   {#if isNavOpen}
     <div id="sidebar-body" transition:slide={{ duration: 500 }}>
+      <input type="file" on:change={onFileSelect}>
       <button on:click={() => framesById.addFrame()}>add frame</button>
     </div>
   {/if}
