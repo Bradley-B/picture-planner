@@ -33,10 +33,14 @@
         margin-left: auto !important;
         grid-area: 3;
     }
+
+    input[type=checkbox] {
+        margin-right: 5px;
+    }
 </style>
 
 <script>
-  import { imageDetails, framesById } from './plannerStores.js';
+  import { settings, imageDetails, framesById } from './plannerStores.js';
   import { slide } from '../../lib/transitions.js';
 
   let isNavOpen = true;
@@ -53,6 +57,7 @@
   </div>
   {#if isNavOpen}
     <div id="sidebar-body" transition:slide={{ duration: 500 }}>
+      <label><input type="checkbox" bind:checked={$settings.isMaskEnabled}>Toggle Mask</label><br/>
       <input type="file" on:change={onFileSelect}>
       <button on:click={() => framesById.addFrame()}>add frame</button>
     </div>

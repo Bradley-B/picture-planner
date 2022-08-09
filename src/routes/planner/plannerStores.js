@@ -10,6 +10,10 @@ export const FRAME_SIZES = [
   [11, 14],
 ];
 
+const createSettingsStore = () => {
+  return writable({ isMaskEnabled: false });
+};
+
 const createImageDetailsStore = () => {
   const { subscribe, update } = writable({ width: 2484, height: 1398, src: 'default-image.jpg' });
 
@@ -85,5 +89,6 @@ const createFramesByIdStore = () => {
   };
 };
 
+export const settings = createSettingsStore();
 export const framesById = createFramesByIdStore();
 export const imageDetails = createImageDetailsStore();

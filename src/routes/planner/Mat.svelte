@@ -23,13 +23,14 @@
 
 <script>
   import Frame from './Frame.svelte';
-  import { imageDetails, framesById } from './plannerStores.js';
+  import { settings, imageDetails, framesById } from './plannerStores.js';
   import { onMount } from 'svelte';
   import { updateAllMaskLayers } from './svgDomFunctions.js';
 
   $: src = $imageDetails.src;
   $: width = $imageDetails.width;
   $: height = $imageDetails.height;
+  $: isMaskEnabled = $settings.isMaskEnabled;
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
@@ -58,7 +59,7 @@
       />
       <defs>
         <mask id="svg-image-mask">
-          <rect width="100%" height="100%" fill="white"/>
+          <rect width="100%" height="100%" fill="{isMaskEnabled ? 'black' : 'white'}"/>
         </mask>
       </defs>
     </svg>

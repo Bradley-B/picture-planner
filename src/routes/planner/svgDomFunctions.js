@@ -16,7 +16,7 @@ export const updateMaskLayer = (id, imageDetails) => {
 
   if (svgMaskRect === null) {
     svgMaskRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    svgMaskRect.setAttribute('fill', 'black');
+    svgMaskRect.setAttribute('fill', 'white');
     svgMaskRect.setAttribute('id', `frame-rect-${id}`);
     svgMaskRect.setAttribute('class', 'frame-rect');
     svgMaskRect.setAttribute('data-id', id);
