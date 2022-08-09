@@ -50,6 +50,24 @@
     imageDetails.replaceImage(event.target.files[0]);
   };
 
+  const saveSvg = () => {
+    const svg = document.getElementById('svg');
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+    let svgUrl = URL.createObjectURL(
+      new Blob(
+        ['<?xml version="1.0" standalone="no"?>\r\n', svg.outerHTML],
+        { type: 'image/svg+xml;charset=utf-8' }
+      )
+    );
+
+    let downloadLink = document.createElement('a');
+    downloadLink.href = svgUrl;
+    downloadLink.download = 'collage.svg';
+    downloadLink.click();
+    URL.revokeObjectURL(svgUrl);
+  }
+
 </script>
 
 <div id="sidebar">
@@ -70,8 +88,9 @@
             {frameSize[0]}"x{frameSize[1]}"
           </option>
         {/each}
-      </select>
+      </select><br/>
 
+      <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={saveSvg}>export as svg</button>
     </div>
   {/if}
 </div>

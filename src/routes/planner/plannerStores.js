@@ -5,6 +5,7 @@ export const PIXELS_PER_INCH = 20;
 
 // frame sizes, in inches
 export const INITIAL_FRAME_SIZES = [
+  [4, 6],
   [5, 7],
   [8.25, 11.75],
   [11, 14],

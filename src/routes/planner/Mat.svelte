@@ -48,13 +48,13 @@
 
 <div id="mat">
   <div id="svg-wrapper">
-    <svg width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+    <svg id="svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
       <image
           xmlns="http://www.w3.org/2000/svg"
           id="svg-image"
           width="100%"
           height="100%"
-          xlink:href="{src}"
+          href="{src}"
           mask="url(#svg-image-mask)"
       />
       <defs>
