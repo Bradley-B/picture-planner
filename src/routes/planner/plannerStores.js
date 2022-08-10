@@ -18,6 +18,16 @@ const createSettingsStore = () => {
 const createImageDetailsStore = () => {
   const { subscribe, update } = writable({ width: 2484, height: 1398, src: 'default-image.jpg', widthInches: 0, heightInches: 0 });
 
+  const updateStoreWithImageInches = () => {
+    update(store => {
+      const pixelsPerInch = get(settings).pixelsPerInch;
+      const svgBoundingBox = document.getElementById('svg-image').getBoundingClientRect()
+      store.widthInches = Math.round(svgBoundingBox.width * (1/pixelsPerInch) * 100) / 100;
+      store.heightInches = Math.round(svgBoundingBox.height * (1/pixelsPerInch) * 100) / 100;
+      return store;
+    });
+  };
+
   const updateStoreWithImage = image => {
     update(store => {
       store.src = image.src;
@@ -25,6 +35,7 @@ const createImageDetailsStore = () => {
       store.height = image.height;
       requestAnimationFrame(() => {
         updateAllMaskLayers(store);
+        updateStoreWithImageInches();
       })
       return store;
     });
@@ -43,6 +54,7 @@ const createImageDetailsStore = () => {
       fileReader.addEventListener('load', fileReaderLoad);
       fileReader.readAsDataURL(newFile);
     },
+    recalculateInches: updateStoreWithImageInches,
   }
 };
 

@@ -35,6 +35,7 @@
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
       updateAllMaskLayers($imageDetails);
+      imageDetails.recalculateInches();
     });
     resizeObserver.observe(document.getElementById('svg-wrapper'));
   });

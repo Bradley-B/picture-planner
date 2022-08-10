@@ -57,6 +57,7 @@
 
   const onPixelsPerInchInput = event => {
     framesById.recalculateFrameSizes(event.target.value);
+    imageDetails.recalculateInches();
   };
 
   const saveSvg = () => {
@@ -101,6 +102,7 @@
       </select><br/>
 
       <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={saveSvg}>export as svg</button>
+      <p>image is currently {$imageDetails.widthInches}"x{$imageDetails.heightInches}"</p>
     </div>
   {/if}
 </div>
