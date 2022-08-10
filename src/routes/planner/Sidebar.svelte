@@ -37,6 +37,11 @@
     input[type=checkbox] {
         margin-right: 5px;
     }
+
+    input[type=number] {
+        margin-left: 5px;
+        width: 40px;
+    }
 </style>
 
 <script>
@@ -48,6 +53,10 @@
 
   const onFileSelect = event => {
     imageDetails.replaceImage(event.target.files[0]);
+  };
+
+  const onPixelsPerInchInput = event => {
+    framesById.recalculateFrameSizes(event.target.value);
   };
 
   const saveSvg = () => {
@@ -79,7 +88,8 @@
     <div id="sidebar-body" transition:slide={{ duration: 500 }}>
 
       <label><input type="checkbox" bind:checked={$settings.isMaskEnabled}>Toggle Mask</label><br/>
-      <input type="file" on:change={onFileSelect}>
+      <label>Pixels per inch<input type="number" bind:value={$settings.pixelsPerInch} on:input={onPixelsPerInchInput}></label>
+      <input type="file" accept=".jpg, .jpeg, .png" on:change={onFileSelect}>
       <button on:click={() => framesById.addFrame(selectedFrameSize)}>add frame</button>
 
       <select bind:value={selectedFrameSize}>

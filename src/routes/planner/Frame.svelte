@@ -64,7 +64,7 @@
 
 <script>
   import { onMount } from 'svelte';
-  import { imageDetails, framesById, PIXELS_PER_INCH } from './plannerStores.js';
+  import { settings, imageDetails, framesById } from './plannerStores.js';
   import { removeMaskLayer, updateMaskLayer } from './svgDomFunctions.js';
 
   let frame;
@@ -75,8 +75,10 @@
 
   export let zIndex = 1;
   export let id = 1;
-  export let width = 100;
-  export let height = 140;
+  export let width;
+  export let height;
+  export let widthInches;
+  export let heightInches;
 
   onMount(() => {
     updateMaskLayer(id, $imageDetails);
@@ -130,7 +132,7 @@
   }
 
   const onRotateClick = () => {
-    framesById.updateFrame({ id, width: height, height: width });
+    framesById.updateFrame({ id, width: height, height: width, widthInches: heightInches, heightInches: widthInches, });
     requestAnimationFrame(() => {
       updateMaskLayer(id, $imageDetails);
     });
@@ -154,7 +156,7 @@
     destTop: 0,
   };
 
-  $: frameSize = `${width/PIXELS_PER_INCH}x${height/PIXELS_PER_INCH}`; // convert to inches
+  $: frameSize = `${width/$settings.pixelsPerInch}"x${height/$settings.pixelsPerInch}"`; // convert to inches
 
   $: allStyles = { ...styles, ...animationStyles, zIndex, width: width + 'px', height: height + 'px' };
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');

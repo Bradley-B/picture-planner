@@ -71,6 +71,8 @@
         zIndex={frame.zIndex}
         height={frame.height}
         width={frame.width}
+        heightInches={frame.heightInches}
+        widthInches={frame.widthInches}
         onPickup={moveFrameToTop}
     />
   {/each}

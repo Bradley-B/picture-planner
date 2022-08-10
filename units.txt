@@ -9,9 +9,9 @@ I'm going to put some notes here to remind myself how the conversion works in di
 ------
 
 plannerStores.js:
-	PIXELS_PER_INCH stores pixels per inch. 1/PIXELS_PER_INCH is inches per pixel.
-	Frame sizes are stored in pixels in the frame store, but sizes from FRAME_SIZES are in inches.
-	When we add a new frame object, it's converted to pixels by multiplying by PIXELS_PER_INCH.
+	$settings.pixelsPerInch stores pixels per inch. 1/pixelsPerInch is inches per pixel.
+	Frame sizes are stored in pixels in the frame store, but sizes from $settings.frameSizes are in inches.
+	When we add a new frame object, it's converted to pixels by multiplying by pixelsPerInch.
 
 Frame.svelte:
 	We want to display the frame size to the user, so we basically just undo the multiplication that we did in order to convert from inches to pixels.
@@ -22,4 +22,4 @@ Mat.svelte:
 	We can multiply this scale factor by real pixels to get viewbox pixels.
 		proof: (viewBoxPixel/realPixel) * realPixel = viewBoxPixel
 
-To display the background image dimensions in pixels, multiply its pixels by 1/PIXELS_PER_INCH.
+To display the background image dimensions in pixels, multiply its pixels by 1/pixelsPerInch.

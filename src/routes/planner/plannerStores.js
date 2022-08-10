@@ -1,7 +1,7 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { updateAllMaskLayers } from './svgDomFunctions.js';
 
-export const PIXELS_PER_INCH = 20;
+export const INITIAL_PIXELS_PER_INCH = 20;
 
 // frame sizes, in inches
 export const INITIAL_FRAME_SIZES = [
@@ -12,11 +12,11 @@ export const INITIAL_FRAME_SIZES = [
 ];
 
 const createSettingsStore = () => {
-  return writable({ isMaskEnabled: false, frameSizes: INITIAL_FRAME_SIZES });
+  return writable({ isMaskEnabled: false, frameSizes: INITIAL_FRAME_SIZES, pixelsPerInch: INITIAL_PIXELS_PER_INCH });
 };
 
 const createImageDetailsStore = () => {
-  const { subscribe, update } = writable({ width: 2484, height: 1398, src: 'default-image.jpg' });
+  const { subscribe, update } = writable({ width: 2484, height: 1398, src: 'default-image.jpg', widthInches: 0, heightInches: 0 });
 
   const updateStoreWithImage = image => {
     update(store => {
@@ -47,13 +47,16 @@ const createImageDetailsStore = () => {
 };
 
 const getNewFrameObject = (store, selectedFrameSize) => {
+  const pixelsPerInch = get(settings).pixelsPerInch;
   const maxId = Math.max(...[0, ...Object.values(store).map(frame => frame.id)]);
   const maxZIndex = Math.max(...[0, ...Object.values(store).map(frame => frame.zIndex)]);
   return {
     id: maxId + 1,
     zIndex: maxZIndex + 1,
-    width: PIXELS_PER_INCH * selectedFrameSize[0], // width is in pixels
-    height: PIXELS_PER_INCH * selectedFrameSize[1] // height is in pixels
+    width: pixelsPerInch * selectedFrameSize[0], // width is in pixels
+    height: pixelsPerInch * selectedFrameSize[1], // height is in pixels
+    widthInches: selectedFrameSize[0],
+    heightInches: selectedFrameSize[1],
   };
 };
 
@@ -73,6 +76,21 @@ const createFramesByIdStore = () => {
 
     updateFrame: frame => update(store => {
       store[frame.id] = { ...store[frame.id], ...frame };
+      return store;
+    }),
+
+    recalculateFrameSizes: newPixelsPerInch => update(store => {
+      requestAnimationFrame(() => {
+        updateAllMaskLayers(get(imageDetails));
+      });
+
+      for (let frame of Object.values(store)) {
+        store[frame.id] = {
+          ...store[frame.id],
+          width: frame.widthInches * newPixelsPerInch,
+          height: frame.heightInches * newPixelsPerInch
+        };
+      }
       return store;
     }),
 
