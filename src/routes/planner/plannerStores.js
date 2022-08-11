@@ -12,7 +12,12 @@ export const INITIAL_FRAME_SIZES = [
 ];
 
 const createSettingsStore = () => {
-  return writable({ isMaskEnabled: false, frameSizes: INITIAL_FRAME_SIZES, pixelsPerInch: INITIAL_PIXELS_PER_INCH });
+  return writable({
+    isMaskEnabled: false,
+    frameSizes: INITIAL_FRAME_SIZES,
+    pixelsPerInch: INITIAL_PIXELS_PER_INCH,
+    frameBorderWidth: 5
+  });
 };
 
 const createImageDetailsStore = () => {
@@ -34,7 +39,7 @@ const createImageDetailsStore = () => {
       store.width = image.width;
       store.height = image.height;
       requestAnimationFrame(() => {
-        updateAllMaskLayers(store);
+        // updateAllMaskLayers(store);
         updateStoreWithImageInches();
       })
       return store;
@@ -65,6 +70,8 @@ const getNewFrameObject = (store, selectedFrameSize) => {
   return {
     id: maxId + 1,
     zIndex: maxZIndex + 1,
+    left: 0,
+    top: 0,
     width: pixelsPerInch * selectedFrameSize[0], // width is in pixels
     height: pixelsPerInch * selectedFrameSize[1], // height is in pixels
     widthInches: selectedFrameSize[0],
@@ -93,7 +100,7 @@ const createFramesByIdStore = () => {
 
     recalculateFrameSizes: newPixelsPerInch => update(store => {
       requestAnimationFrame(() => {
-        updateAllMaskLayers(get(imageDetails));
+        // updateAllMaskLayers(get(imageDetails));
       });
 
       for (let frame of Object.values(store)) {

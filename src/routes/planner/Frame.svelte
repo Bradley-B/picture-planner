@@ -3,9 +3,13 @@
     .frame {
         width: var(--width);
         height: var(--height);
-        position: absolute;
+
+        position: fixed;
+        top: 0;
+        left: 0;
+
         cursor: grab;
-        border: solid red 5px; /* TODO figure out if having a border negatively affects background image size calculation */
+        border: solid red var(--borderWidth); /* TODO figure out if having a border negatively affects background image size calculation */
         user-select: none;
 
         z-index: var(--zIndex);
@@ -70,18 +74,23 @@
   let frame;
   let animating = false;
 
+  let left = 0;
+  let top = 0;
+  let opacity = 1.0;
+
   export let onDrop = () => true;
   export let onPickup = () => {};
 
-  export let zIndex = 1;
-  export let id = 1;
-  export let width;
-  export let height;
-  export let widthInches;
-  export let heightInches;
+  export let frameObject;
+  $: zIndex = frameObject.zIndex;
+  $: id = frameObject.id;
+  $: width = frameObject.width;
+  $: height = frameObject.height;
+  $: widthInches = frameObject.widthInches;
+  $: heightInches = frameObject.heightInches;
 
   onMount(() => {
-    updateMaskLayer(id, $imageDetails);
+    // updateMaskLayer(id, $imageDetails);
   });
 
   const onMouseDown = (mouseDownEvent) => {
@@ -89,38 +98,40 @@
     onPickup(id);
 
     // store the original location in case it needs to be reset
-    animationStyles.destLeft = styles.left;
-    animationStyles.destTop = styles.top;
+    animationStyles.destLeft = left;
+    animationStyles.destTop = top;
 
-    const shiftX = mouseDownEvent.clientX - parseInt(styles.left);
-    const shiftY = mouseDownEvent.clientY - parseInt(styles.top);
+    const shiftX = mouseDownEvent.clientX - left;
+    const shiftY = mouseDownEvent.clientY - top;
 
     const onMouseMove = (mouseMoveEvent) => {
-      updateMaskLayer(id, $imageDetails);
-      styles.opacity = 0.5;
-      styles.left = mouseMoveEvent.pageX - shiftX + 'px';
-      styles.top = mouseMoveEvent.pageY - shiftY + 'px';
+      // updateMaskLayer(id, $imageDetails);
+      opacity = 0.5;
+      left = mouseMoveEvent.pageX - shiftX;
+      top = mouseMoveEvent.pageY - shiftY;
+      framesById.updateFrame({ id, left, top });
     }
 
     const onAnimationEnd = () => {
       // set the location back to where it was before we started dragging
-      styles.left = animationStyles.destLeft;
-      styles.top = animationStyles.destTop;
+      left = animationStyles.destLeft;
+      top = animationStyles.destTop;
+      framesById.updateFrame({ id, left, top });
       animating = false;
       frame.removeEventListener('animationend', onAnimationEnd);
     }
 
     const onMouseUp = (mouseUpEvent) => {
-      styles.opacity = 1.0;
-      updateMaskLayer(id, $imageDetails);
+      opacity = 1.0;
+      // updateMaskLayer(id, $imageDetails);
       const legalPlay = onDrop(mouseUpEvent.clientX, mouseUpEvent.clientY);
 
       if (!legalPlay) {
         // reject the drop, play the snap back animation
         frame.addEventListener('animationend', onAnimationEnd);
         animating = true;
-        animationStyles.sourceLeft = styles.left;
-        animationStyles.sourceTop = styles.top;
+        animationStyles.sourceLeft = left;
+        animationStyles.sourceTop = top;
       }
 
       document.removeEventListener('mousemove', onMouseMove);
@@ -134,20 +145,14 @@
   const onRotateClick = () => {
     framesById.updateFrame({ id, width: height, height: width, widthInches: heightInches, heightInches: widthInches, });
     requestAnimationFrame(() => {
-      updateMaskLayer(id, $imageDetails);
+      // updateMaskLayer(id, $imageDetails);
     });
   };
 
   const onCloseClick = () => {
     framesById.removeFrame(id);
-    removeMaskLayer(id);
+    // removeMaskLayer(id);
   }
-
-  const styles = {
-    left: 0,
-    top: 0,
-    opacity: 1.0,
-  };
 
   const animationStyles = {
     sourceLeft: 0,
@@ -158,7 +163,17 @@
 
   $: frameSize = `${width/$settings.pixelsPerInch}"x${height/$settings.pixelsPerInch}"`; // convert to inches
 
-  $: allStyles = { ...styles, ...animationStyles, zIndex, width: width + 'px', height: height + 'px' };
+  $: allStyles = {
+    ...animationStyles,
+    zIndex,
+    opacity,
+    left: left + 'px',
+    top: top + 'px',
+    width: width + 'px',
+    height: height + 'px',
+    borderWidth: $settings.frameBorderWidth + 'px',
+  };
+
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');
 
 </script>

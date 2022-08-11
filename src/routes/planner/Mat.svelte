@@ -26,6 +26,10 @@
   import { settings, imageDetails, framesById } from './plannerStores.js';
   import { onMount } from 'svelte';
   import { updateAllMaskLayers } from './svgDomFunctions.js';
+  import SvgMaskRect from './SvgMaskRect.svelte';
+
+  let svgImage;
+  let svgImageBoundingBox;
 
   $: src = $imageDetails.src;
   $: width = $imageDetails.width;
@@ -34,11 +38,16 @@
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
-      updateAllMaskLayers($imageDetails);
+      // updateAllMaskLayers($imageDetails);
       imageDetails.recalculateInches();
+      updateSvgBoundingBox();
     });
     resizeObserver.observe(document.getElementById('svg-wrapper'));
   });
+
+  const updateSvgBoundingBox = () => {
+    svgImageBoundingBox = svgImage.getBoundingClientRect();
+  };
 
   const moveFrameToTop = id => {
     framesById.updateFrame({ id, zIndex: Object.keys($framesById).length + 1 });
@@ -53,6 +62,7 @@
       <image
           xmlns="http://www.w3.org/2000/svg"
           id="svg-image"
+          bind:this={svgImage}
           width="100%"
           height="100%"
           href="{src}"
@@ -61,20 +71,15 @@
       <defs>
         <mask id="svg-image-mask">
           <rect width="100%" height="100%" fill="{isMaskEnabled ? 'black' : 'white'}"/>
+          {#each Object.values($framesById) as frame (frame.id)}
+            <SvgMaskRect {frame} {svgImageBoundingBox} />
+          {/each}
         </mask>
       </defs>
     </svg>
   </div>
 
   {#each Object.values($framesById) as frame (frame.id)}
-    <Frame
-        id={frame.id}
-        zIndex={frame.zIndex}
-        height={frame.height}
-        width={frame.width}
-        heightInches={frame.heightInches}
-        widthInches={frame.widthInches}
-        onPickup={moveFrameToTop}
-    />
+    <Frame frameObject={frame} onPickup={moveFrameToTop} />
   {/each}
 </div>
