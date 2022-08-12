@@ -57,7 +57,7 @@
 
   const onPixelsPerInchInput = event => {
     framesById.recalculateFrameSizes(event.target.value);
-    imageDetails.recalculateInches();
+    // imageDetails.updateSvgBoundingBox();
   };
 
   const saveSvg = () => {
@@ -77,6 +77,9 @@
     downloadLink.click();
     URL.revokeObjectURL(svgUrl);
   }
+
+  $: displayWidthInches = Math.round($imageDetails.displayBoundingBox.width * (1/$settings.pixelsPerInch) * 100) / 100;
+  $: displayHeightInches = Math.round($imageDetails.displayBoundingBox.height * (1/$settings.pixelsPerInch) * 100) / 100;
 
 </script>
 
@@ -102,7 +105,7 @@
       </select><br/>
 
       <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={saveSvg}>export as svg</button>
-      <p>image is currently {$imageDetails.widthInches}"x{$imageDetails.heightInches}"</p>
+      <p>image is currently {displayWidthInches}"x{displayHeightInches}"</p>
     </div>
   {/if}
 </div>

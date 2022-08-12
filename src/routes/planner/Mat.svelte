@@ -29,25 +29,19 @@
   import SvgMaskRect from './SvgMaskRect.svelte';
 
   let svgImage;
-  let svgImageBoundingBox;
 
   $: src = $imageDetails.src;
-  $: width = $imageDetails.width;
-  $: height = $imageDetails.height;
+  $: sourceWidth = $imageDetails.sourceWidth;
+  $: sourceHeight = $imageDetails.sourceHeight;
   $: isMaskEnabled = $settings.isMaskEnabled;
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
       // updateAllMaskLayers($imageDetails);
-      imageDetails.recalculateInches();
-      updateSvgBoundingBox();
+      imageDetails.updateSvgBoundingBox(svgImage.getBoundingClientRect());
     });
     resizeObserver.observe(document.getElementById('svg-wrapper'));
   });
-
-  const updateSvgBoundingBox = () => {
-    svgImageBoundingBox = svgImage.getBoundingClientRect();
-  };
 
   const moveFrameToTop = id => {
     framesById.updateFrame({ id, zIndex: Object.keys($framesById).length + 1 });
@@ -58,7 +52,7 @@
 
 <div id="mat">
   <div id="svg-wrapper">
-    <svg id="svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+    <svg id="svg" width="{sourceWidth}" height="{sourceHeight}" viewBox="0 0 {sourceWidth} {sourceHeight}">
       <image
           xmlns="http://www.w3.org/2000/svg"
           id="svg-image"
@@ -72,7 +66,7 @@
         <mask id="svg-image-mask">
           <rect width="100%" height="100%" fill="{isMaskEnabled ? 'black' : 'white'}"/>
           {#each Object.values($framesById) as frame (frame.id)}
-            <SvgMaskRect {frame} {svgImageBoundingBox} />
+            <SvgMaskRect {frame} />
           {/each}
         </mask>
       </defs>

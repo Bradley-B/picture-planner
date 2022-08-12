@@ -21,14 +21,16 @@ const createSettingsStore = () => {
 };
 
 const createImageDetailsStore = () => {
-  const { subscribe, update } = writable({ width: 2484, height: 1398, src: 'default-image.jpg', widthInches: 0, heightInches: 0 });
+  const { subscribe, update } = writable({
+    sourceWidth: 2484,
+    sourceHeight: 1398,
+    src: 'default-image.jpg',
+    displayBoundingBox: {},
+  });
 
-  const updateStoreWithImageInches = () => {
+  const updateSvgBoundingBox = svgBoundingBox => {
     update(store => {
-      const pixelsPerInch = get(settings).pixelsPerInch;
-      const svgBoundingBox = document.getElementById('svg-image').getBoundingClientRect()
-      store.widthInches = Math.round(svgBoundingBox.width * (1/pixelsPerInch) * 100) / 100;
-      store.heightInches = Math.round(svgBoundingBox.height * (1/pixelsPerInch) * 100) / 100;
+      store.displayBoundingBox = svgBoundingBox || document.getElementById('svg-image').getBoundingClientRect();
       return store;
     });
   };
@@ -36,11 +38,11 @@ const createImageDetailsStore = () => {
   const updateStoreWithImage = image => {
     update(store => {
       store.src = image.src;
-      store.width = image.width;
-      store.height = image.height;
+      store.sourceWidth = image.width;
+      store.sourceHeight = image.height;
       requestAnimationFrame(() => {
         // updateAllMaskLayers(store);
-        updateStoreWithImageInches();
+        updateSvgBoundingBox();
       })
       return store;
     });
@@ -59,7 +61,7 @@ const createImageDetailsStore = () => {
       fileReader.addEventListener('load', fileReaderLoad);
       fileReader.readAsDataURL(newFile);
     },
-    recalculateInches: updateStoreWithImageInches,
+    updateSvgBoundingBox,
   }
 };
 
