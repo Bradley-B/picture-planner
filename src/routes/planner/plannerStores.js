@@ -1,5 +1,4 @@
 import { get, writable } from 'svelte/store';
-import { updateAllMaskLayers } from './svgDomFunctions.js';
 
 export const INITIAL_PIXELS_PER_INCH = 20;
 
@@ -25,7 +24,7 @@ const createImageDetailsStore = () => {
     sourceWidth: 2484,
     sourceHeight: 1398,
     src: 'default-image.jpg',
-    displayBoundingBox: {},
+    displayBoundingBox: { x: 0, y: 0, width: 0, height: 0 },
   });
 
   const updateSvgBoundingBox = svgBoundingBox => {
@@ -41,7 +40,6 @@ const createImageDetailsStore = () => {
       store.sourceWidth = image.width;
       store.sourceHeight = image.height;
       requestAnimationFrame(() => {
-        // updateAllMaskLayers(store);
         updateSvgBoundingBox();
       })
       return store;
@@ -101,10 +99,6 @@ const createFramesByIdStore = () => {
     }),
 
     recalculateFrameSizes: newPixelsPerInch => update(store => {
-      requestAnimationFrame(() => {
-        // updateAllMaskLayers(get(imageDetails));
-      });
-
       for (let frame of Object.values(store)) {
         store[frame.id] = {
           ...store[frame.id],

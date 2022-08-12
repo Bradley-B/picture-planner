@@ -59,7 +59,7 @@
     To change the scale, change the "pixels per inch" option in the sidebar or resize your screen.
 
     Only supports desktop screens because mobile is too small.
-    The jank is part of the charm 💖
+    Now with 30% less jank 💖
   </p>
 
   <a href="/planner">Take a look-see</a>

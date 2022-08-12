@@ -57,7 +57,6 @@
 
   const onPixelsPerInchInput = event => {
     framesById.recalculateFrameSizes(event.target.value);
-    // imageDetails.updateSvgBoundingBox();
   };
 
   const saveSvg = () => {

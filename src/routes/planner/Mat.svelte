@@ -25,7 +25,6 @@
   import Frame from './Frame.svelte';
   import { settings, imageDetails, framesById } from './plannerStores.js';
   import { onMount } from 'svelte';
-  import { updateAllMaskLayers } from './svgDomFunctions.js';
   import SvgMaskRect from './SvgMaskRect.svelte';
 
   let svgImage;
@@ -37,7 +36,6 @@
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
-      // updateAllMaskLayers($imageDetails);
       imageDetails.updateSvgBoundingBox(svgImage.getBoundingClientRect());
     });
     resizeObserver.observe(document.getElementById('svg-wrapper'));

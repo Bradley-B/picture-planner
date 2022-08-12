@@ -30,10 +30,6 @@
         }
     }
 
-    .snap-back {
-        animation: snap-back 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
     .frame button {
         visibility: hidden;
         font-size: x-large;
@@ -67,18 +63,14 @@
 </style>
 
 <script>
-  import { onMount } from 'svelte';
-  import { settings, imageDetails, framesById } from './plannerStores.js';
-  import { removeMaskLayer, updateMaskLayer } from './svgDomFunctions.js';
+  import { settings, framesById } from './plannerStores.js';
 
   let frame;
-  let animating = false;
 
   let left = 0;
   let top = 0;
   let opacity = 1.0;
 
-  export let onDrop = () => true;
   export let onPickup = () => {};
 
   export let frameObject;
@@ -89,51 +81,21 @@
   $: widthInches = frameObject.widthInches;
   $: heightInches = frameObject.heightInches;
 
-  onMount(() => {
-    // updateMaskLayer(id, $imageDetails);
-  });
-
   const onMouseDown = (mouseDownEvent) => {
-    if (animating) return false;
     onPickup(id);
-
-    // store the original location in case it needs to be reset
-    animationStyles.destLeft = left;
-    animationStyles.destTop = top;
 
     const shiftX = mouseDownEvent.clientX - left;
     const shiftY = mouseDownEvent.clientY - top;
 
     const onMouseMove = (mouseMoveEvent) => {
-      // updateMaskLayer(id, $imageDetails);
       opacity = 0.5;
       left = mouseMoveEvent.pageX - shiftX;
       top = mouseMoveEvent.pageY - shiftY;
       framesById.updateFrame({ id, left, top });
     }
 
-    const onAnimationEnd = () => {
-      // set the location back to where it was before we started dragging
-      left = animationStyles.destLeft;
-      top = animationStyles.destTop;
-      framesById.updateFrame({ id, left, top });
-      animating = false;
-      frame.removeEventListener('animationend', onAnimationEnd);
-    }
-
-    const onMouseUp = (mouseUpEvent) => {
+    const onMouseUp = () => {
       opacity = 1.0;
-      // updateMaskLayer(id, $imageDetails);
-      const legalPlay = onDrop(mouseUpEvent.clientX, mouseUpEvent.clientY);
-
-      if (!legalPlay) {
-        // reject the drop, play the snap back animation
-        frame.addEventListener('animationend', onAnimationEnd);
-        animating = true;
-        animationStyles.sourceLeft = left;
-        animationStyles.sourceTop = top;
-      }
-
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     }
@@ -144,27 +106,15 @@
 
   const onRotateClick = () => {
     framesById.updateFrame({ id, width: height, height: width, widthInches: heightInches, heightInches: widthInches, });
-    requestAnimationFrame(() => {
-      // updateMaskLayer(id, $imageDetails);
-    });
   };
 
   const onCloseClick = () => {
     framesById.removeFrame(id);
-    // removeMaskLayer(id);
   }
-
-  const animationStyles = {
-    sourceLeft: 0,
-    sourceTop: 0,
-    destLeft: 0,
-    destTop: 0,
-  };
 
   $: frameSize = `${width/$settings.pixelsPerInch}"x${height/$settings.pixelsPerInch}"`; // convert to inches
 
   $: allStyles = {
-    ...animationStyles,
     zIndex,
     opacity,
     left: left + 'px',
@@ -182,7 +132,6 @@
     bind:this={frame}
     class="frame"
     id="frame-{id}"
-    class:snap-back={animating}
     style={cssVariables}
     on:mousedown={onMouseDown}
 >
