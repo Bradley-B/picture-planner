@@ -34,8 +34,9 @@ const createImageDetailsStore = () => {
     });
   };
 
-  const updateStoreWithImage = image => {
+  const updateStoreWithImage = (image, fileType) => {
     update(store => {
+      store.type = fileType;
       store.src = image.src;
       store.sourceWidth = image.width;
       store.sourceHeight = image.height;
@@ -52,7 +53,7 @@ const createImageDetailsStore = () => {
       let fileReader = new FileReader();
       const fileReaderLoad = () => {
         let image = new Image();
-        image.onload = () => updateStoreWithImage(image);
+        image.onload = () => updateStoreWithImage(image, newFile.type);
         image.src = fileReader.result;
         fileReader.removeEventListener('load', fileReaderLoad);
       };

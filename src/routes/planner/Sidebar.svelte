@@ -47,6 +47,7 @@
 <script>
   import { settings, imageDetails, framesById } from './plannerStores.js';
   import { slide } from '../../lib/transitions.js';
+  import { download, downloadImageFromBlob, getSvgHtmlForDownload } from '../../lib/utilityFunctions.js';
 
   let isNavOpen = true;
   let selectedFrameSize;
@@ -59,29 +60,18 @@
     framesById.recalculateFrameSizes(event.target.value);
   };
 
-  const saveSvg = () => {
-    const svg = document.getElementById('svg').cloneNode(true);
-    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  const exportImage = () => {
+    const svg = getSvgHtmlForDownload();
+    const blob = new Blob([svg.outerHTML],{ type: 'image/svg+xml;charset=utf-8' });
+    const blobUrl = URL.createObjectURL(blob);
+    downloadImageFromBlob(blobUrl, $imageDetails);
+  };
 
-    for (let frameRect of svg.querySelectorAll('.frame-rect')) {
-      frameRect.setAttribute('x', '' + parseFloat(frameRect.style.getPropertyValue('--left')));
-      frameRect.setAttribute('y', '' + parseFloat(frameRect.style.getPropertyValue('--top')));
-      frameRect.style.removeProperty('--left');
-      frameRect.style.removeProperty('--top');
-    }
-
-    let svgUrl = URL.createObjectURL(
-      new Blob(
-        ['<?xml version="1.0" standalone="no"?>\r\n', svg.outerHTML],
-        { type: 'image/svg+xml;charset=utf-8' }
-      )
-    );
-
-    let downloadLink = document.createElement('a');
-    downloadLink.href = svgUrl;
-    downloadLink.download = 'collage.svg';
-    downloadLink.click();
-    URL.revokeObjectURL(svgUrl);
+  const exportSvg = () => {
+    const svg = getSvgHtmlForDownload();
+    const blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n', svg.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
+    const svgUrl = URL.createObjectURL(blob);
+    download(svgUrl, 'collage.svg');
   }
 
   $: displayWidthInches = Math.round($imageDetails.displayBoundingBox.width * (1/$settings.pixelsPerInch) * 100) / 100;
@@ -110,7 +100,8 @@
         {/each}
       </select><br/>
 
-      <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={saveSvg}>export as svg</button>
+      <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportSvg}>export as svg</button>
+      <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportImage}>export as image</button>
       <p>image is currently {displayWidthInches}"x{displayHeightInches}"</p>
     </div>
   {/if}
