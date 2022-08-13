@@ -109,7 +109,7 @@
     framesById.removeFrame(id);
   }
 
-  $: frameSize = `${width/$settings.pixelsPerInch}"x${height/$settings.pixelsPerInch}"`; // convert to inches
+  $: frameSize = `${widthInches}"x${heightInches}"`;
 
   $: allStyles = {
     zIndex,
