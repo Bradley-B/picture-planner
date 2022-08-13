@@ -36,7 +36,9 @@
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(() => {
-      imageDetails.updateSvgBoundingBox(svgImage.getBoundingClientRect());
+      if (svgImage) {
+        imageDetails.updateSvgBoundingBox(svgImage.getBoundingClientRect());
+      }
     });
     resizeObserver.observe(document.getElementById('svg-wrapper'));
   });

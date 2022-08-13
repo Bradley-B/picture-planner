@@ -6,8 +6,8 @@ export const INITIAL_PIXELS_PER_INCH = 20;
 export const INITIAL_FRAME_SIZES = [
   [4, 6],
   [5, 7],
-  [8.25, 11.75],
-  [11, 14],
+  [8, 10],
+  [10, 13],
 ];
 
 const createSettingsStore = () => {
@@ -15,7 +15,7 @@ const createSettingsStore = () => {
     isMaskEnabled: false,
     frameSizes: INITIAL_FRAME_SIZES,
     pixelsPerInch: INITIAL_PIXELS_PER_INCH,
-    frameBorderWidth: 5
+    frameBorderWidth: 2
   });
 };
 
@@ -65,15 +65,21 @@ const createImageDetailsStore = () => {
 
 const getNewFrameObject = (store, selectedFrameSize) => {
   const pixelsPerInch = get(settings).pixelsPerInch;
+  const svgBoundingBox = get(imageDetails).displayBoundingBox;
+
   const maxId = Math.max(...[0, ...Object.values(store).map(frame => frame.id)]);
   const maxZIndex = Math.max(...[0, ...Object.values(store).map(frame => frame.zIndex)]);
+
+  const width = pixelsPerInch * selectedFrameSize[0]; // width is in pixels
+  const height = pixelsPerInch * selectedFrameSize[1]; // height is in pixels
+
   return {
+    width,
+    height,
     id: maxId + 1,
     zIndex: maxZIndex + 1,
-    left: 0,
-    top: 0,
-    width: pixelsPerInch * selectedFrameSize[0], // width is in pixels
-    height: pixelsPerInch * selectedFrameSize[1], // height is in pixels
+    left: svgBoundingBox.left + (svgBoundingBox.width/2) - (width/2),
+    top: svgBoundingBox.top + (svgBoundingBox.height/2) - (height/2),
     widthInches: selectedFrameSize[0],
     heightInches: selectedFrameSize[1],
   };

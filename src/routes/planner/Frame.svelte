@@ -66,20 +66,19 @@
   import { settings, framesById } from './plannerStores.js';
 
   let frame;
-
-  let left = 0;
-  let top = 0;
   let opacity = 1.0;
-
   export let onPickup = () => {};
-
   export let frameObject;
+
   $: zIndex = frameObject.zIndex;
   $: id = frameObject.id;
   $: width = frameObject.width;
   $: height = frameObject.height;
   $: widthInches = frameObject.widthInches;
   $: heightInches = frameObject.heightInches;
+
+  $: left = frameObject.left;
+  $: top = frameObject.top;
 
   const onMouseDown = (mouseDownEvent) => {
     onPickup(id);
@@ -89,9 +88,7 @@
 
     const onMouseMove = (mouseMoveEvent) => {
       opacity = 0.5;
-      left = mouseMoveEvent.pageX - shiftX;
-      top = mouseMoveEvent.pageY - shiftY;
-      framesById.updateFrame({ id, left, top });
+      framesById.updateFrame({ id, left: mouseMoveEvent.pageX - shiftX, top: mouseMoveEvent.pageY - shiftY });
     }
 
     const onMouseUp = () => {

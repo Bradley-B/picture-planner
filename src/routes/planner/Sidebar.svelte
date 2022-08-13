@@ -60,6 +60,8 @@
   };
 
   const saveSvg = () => {
+    // TODO fix export by converting translate calls to absolute x/y
+
     const svg = document.getElementById('svg');
     svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 

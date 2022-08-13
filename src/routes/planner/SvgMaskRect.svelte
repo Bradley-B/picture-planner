@@ -11,10 +11,10 @@
 
   $: scale = $imageDetails.sourceWidth / $imageDetails.displayBoundingBox.width; // viewBox pixels per real pixel
 
-  $: left = scale * (Math.round(frame.left - $imageDetails.displayBoundingBox.x) + $settings.frameBorderWidth);
-  $: top = scale * (Math.round(frame.top - $imageDetails.displayBoundingBox.y) + $settings.frameBorderWidth);
-  $: width = scale * frame.width;
-  $: height = scale * frame.height;
+  $: left = scale * (Math.round(frame.left - $imageDetails.displayBoundingBox.x) + $settings.frameBorderWidth - 1);
+  $: top = scale * (Math.round(frame.top - $imageDetails.displayBoundingBox.y) + $settings.frameBorderWidth - 1);
+  $: width = scale * (frame.width + 2);
+  $: height = scale * (frame.height + 2);
 
   $: style = `--left: ${left}px; --top: ${top}px`;
 </script>
