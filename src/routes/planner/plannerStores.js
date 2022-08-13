@@ -11,12 +11,23 @@ export const INITIAL_FRAME_SIZES = [
 ];
 
 const createSettingsStore = () => {
-  return writable({
+  const { subscribe, update } = writable({
     isMaskEnabled: false,
     frameSizes: INITIAL_FRAME_SIZES,
     pixelsPerInch: INITIAL_PIXELS_PER_INCH,
     frameBorderWidth: 2
   });
+
+  return {
+    subscribe,
+    updatePixelsPerInch: newPixelsPerInch => {
+      framesById.recalculateFrameSizes(newPixelsPerInch);
+      update(store => {
+        store.pixelsPerInch = newPixelsPerInch;
+        return store;
+      });
+    },
+  };
 };
 
 const createImageDetailsStore = () => {
