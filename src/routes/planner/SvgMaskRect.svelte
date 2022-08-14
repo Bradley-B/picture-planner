@@ -9,7 +9,7 @@
 
   export let frame;
 
-  $: scale = $imageDetails.sourceWidth / $imageDetails.displayBoundingBox.width; // viewBox pixels per real pixel
+  $: scale = $imageDetails.sourceWidth / $imageDetails.displayBoundingBox.width;
 
   $: left = scale * (frame.left - $imageDetails.displayBoundingBox.x + $settings.frameBorderWidth - 1);
   $: top = scale * (frame.top - $imageDetails.displayBoundingBox.y + $settings.frameBorderWidth - 1);

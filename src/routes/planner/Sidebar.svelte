@@ -47,7 +47,7 @@
 <script>
   import { settings, imageDetails, framesById } from './plannerStores.js';
   import { slide } from '../../lib/transitions.js';
-  import { download, downloadImageFromBlob, getSvgHtmlForDownload } from '../../lib/utilityFunctions.js';
+  import { download, generateCollectionZip, getCanvasFromBlob, getSvgForDownload } from '../../lib/exportFunctions.js';
 
   let isNavOpen = true;
   let selectedFrameSize;
@@ -63,18 +63,27 @@
   };
 
   const exportImage = () => {
-    const svg = getSvgHtmlForDownload();
-    const blob = new Blob([svg.outerHTML],{ type: 'image/svg+xml;charset=utf-8' });
-    const blobUrl = URL.createObjectURL(blob);
-    downloadImageFromBlob(blobUrl, $imageDetails);
+    const blobUrl = getSvgForDownload();
+    getCanvasFromBlob(blobUrl, $imageDetails).then(([canvas]) => {
+      download(canvas.toDataURL($imageDetails.type), `collage.${$imageDetails.type.split('/')[1]}`, blobUrl);
+    });
   };
 
   const exportSvg = () => {
-    const svg = getSvgHtmlForDownload();
-    const blob = new Blob(['<?xml version="1.0" standalone="no"?>\r\n', svg.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
-    const svgUrl = URL.createObjectURL(blob);
-    download(svgUrl, 'collage.svg');
+    download(getSvgForDownload(), 'collage.svg');
   }
+
+  const exportCollection = () => {
+    const blobUrl = getSvgForDownload();
+
+    getCanvasFromBlob(blobUrl, $imageDetails).then(([, sourceCanvasContext]) => {
+      return generateCollectionZip($framesById, $imageDetails, $settings, sourceCanvasContext);
+    }).then(content => {
+      URL.revokeObjectURL(blobUrl);
+      const contentUrl = URL.createObjectURL(content);
+      download(contentUrl, 'collage.zip');
+    });
+  };
 
   const onDisplayWidthInput = event => {
     const input = event.target.value;
@@ -118,6 +127,7 @@
 
       <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportSvg}>export as svg</button>
       <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportImage}>export as image</button>
+      <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportCollection}>export as collection</button>
 
       <p>
         total size is
