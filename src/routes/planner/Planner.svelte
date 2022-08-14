@@ -4,7 +4,7 @@
       height: 100vh;
       display: grid;
       grid-template-columns: auto min-content;
-      background-color: #bff5bf;
+      background-color: #534D41;
       overflow: hidden;
   }
 </style>

@@ -1,12 +1,12 @@
 <style>
     #sidebar {
-        background-color: wheat;
+        font-family: 'Roboto', sans-serif;
+        color: #F5DFBB;
+        background-color: #454036;
         width: 300px;
         height: 100%;
-    }
-
-    input[type=checkbox] {
-        margin-right: 5px;
+        display: flex;
+        flex-direction: column;
     }
 
     input[type=number] {
@@ -18,8 +18,7 @@
 <script>
   import { settings, imageDetails, framesById } from './plannerStores.js';
   import { download, generateCollectionZip, getCanvasFromBlob, getSvgForDownload } from '../../lib/exportFunctions.js';
-
-  let selectedFrameSize;
+  import FrameSettings from '../../lib/components/sidebar/FrameSettings.svelte';
 
   const onFileSelect = event => {
     imageDetails.replaceImage(event.target.files[0]);
@@ -74,18 +73,12 @@
 </script>
 
 <div id="sidebar">
-  <label><input type="checkbox" bind:checked={$settings.isMaskEnabled}>Toggle Mask</label><br/>
+  <FrameSettings />
+  <br/>
+  <br/>
+
   <label>Pixels per inch<input type="number" value={$settings.pixelsPerInch} on:input={onPixelsPerInchInput} min="1"></label>
   <input type="file" accept=".jpg, .jpeg, .png" on:change={onFileSelect}>
-  <button on:click={() => framesById.addFrame(selectedFrameSize)}>add frame</button>
-
-  <select bind:value={selectedFrameSize}>
-    {#each $settings.frameSizes as frameSize}
-      <option value={frameSize}>
-        {frameSize[0]}"x{frameSize[1]}"
-      </option>
-    {/each}
-  </select><br/>
 
   <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportSvg}>export as svg</button>
   <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportImage}>export as image</button>

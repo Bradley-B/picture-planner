@@ -20,6 +20,7 @@ const createSettingsStore = () => {
 
   return {
     set,
+    updateWith: object => update(store => ({ ...store, ...object })),
     subscribe,
     updatePixelsPerInch: newPixelsPerInch => {
       framesById.recalculateFrameSizes(newPixelsPerInch);
