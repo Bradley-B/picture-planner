@@ -3,12 +3,16 @@
       margin: 10px 0 0 10px;
   }
 
+  button {
+      font-family: 'Roboto', sans-serif;
+      cursor: pointer;
+      border: none;
+  }
+
   .mask-container {
       margin-top: 10px;
       margin-left: 10px;
       margin-bottom: 10px;
-
-      font-family: 'Roboto', sans-serif;
 
       display: flex;
       align-items: center;
@@ -21,9 +25,6 @@
   }
 
   .btn-container > button {
-      font-family: 'Roboto', sans-serif;
-      border: none;
-      cursor: pointer;
       margin: 0;
       width: 40px;
       height: 30px;
@@ -39,6 +40,29 @@
       color: white;
   }
 
+  .add-container {
+      margin-left: 10px;
+  }
+
+  .add-container > button {
+      background-color: white;
+      height: 25px;
+  }
+
+  .add-container > button:hover {
+      background-color: var(--color-input-background-darken);
+      color: white;
+  }
+
+  .add-container > button:active {
+      background-color: var(--color-primary);
+      color: white;
+  }
+
+  select {
+      height: 20px;
+  }
+
 </style>
 
 <script>
@@ -48,10 +72,11 @@
 
   const onOnClick = () => settings.updateWith({ isMaskEnabled: true });
   const onOffClick = () => settings.updateWith({ isMaskEnabled: false });
+  const onFrameAdd = () => framesById.addFrame(selectedFrameSize);
 </script>
 
 <div class="frame-settings-container">
-  <h2>Frames</h2>
+  <h3>Frames</h3>
   <div class="mask-container">
     Mask
     <div class="btn-container">
@@ -60,8 +85,7 @@
     </div>
   </div>
   <div class="add-container">
-    <button on:click={() => framesById.addFrame(selectedFrameSize)}>add frame</button>
-
+    <button on:click={onFrameAdd}>add frame</button>
     <select bind:value={selectedFrameSize}>
       {#each $settings.frameSizes as frameSize}
         <option value={frameSize}>

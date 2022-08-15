@@ -3,15 +3,16 @@
         font-family: 'Roboto', sans-serif;
         color: #F5DFBB;
         background-color: #454036;
-        width: 300px;
+        width: 250px;
         height: 100%;
         display: flex;
         flex-direction: column;
+        overflow-y: auto;
     }
 
-    input[type=number] {
-        margin-left: 5px;
-        width: 55px;
+    hr {
+        border: #534D41 2px solid;
+        margin: 15px 0 15px 0;
     }
 </style>
 
@@ -19,15 +20,10 @@
   import { settings, imageDetails, framesById } from './plannerStores.js';
   import { download, generateCollectionZip, getCanvasFromBlob, getSvgForDownload } from '../../lib/exportFunctions.js';
   import FrameSettings from '../../lib/components/sidebar/FrameSettings.svelte';
+  import ImageSizeSettings from '../../lib/components/sidebar/ImageSizeSettings.svelte';
 
   const onFileSelect = event => {
     imageDetails.replaceImage(event.target.files[0]);
-  };
-
-  const onPixelsPerInchInput = event => {
-    const input = event.target.value;
-    if (input === '' || input === 0) return;
-    settings.updatePixelsPerInch(input);
   };
 
   const exportImage = () => {
@@ -53,40 +49,17 @@
     });
   };
 
-  const onDisplayWidthInput = event => {
-    const input = event.target.value;
-    if (input === '' || input === 0) return;
-    const newPixelsPerInch = $imageDetails.displayBoundingBox.width / input;
-    settings.updatePixelsPerInch(newPixelsPerInch);
-  };
-
-  const onDisplayHeightInput = event => {
-    const input = event.target.value;
-    if (input === '' || input === 0) return;
-    const newPixelsPerInch = $imageDetails.displayBoundingBox.height / input;
-    settings.updatePixelsPerInch(newPixelsPerInch);
-  };
-
-  $: displayWidthInches = $imageDetails.displayBoundingBox.width / $settings.pixelsPerInch;
-  $: displayHeightInches = $imageDetails.displayBoundingBox.height / $settings.pixelsPerInch;
-
 </script>
 
 <div id="sidebar">
   <FrameSettings />
-  <br/>
-  <br/>
+  <hr />
+  <ImageSizeSettings />
+  <hr />
 
-  <label>Pixels per inch<input type="number" value={$settings.pixelsPerInch} on:input={onPixelsPerInchInput} min="1"></label>
   <input type="file" accept=".jpg, .jpeg, .png" on:change={onFileSelect}>
 
   <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportSvg}>export as svg</button>
   <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportImage}>export as image</button>
   <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportCollection}>export as collection</button>
-
-  <p>
-    total size is
-    <input type="number" value={displayWidthInches} on:input={onDisplayWidthInput} min="1" />" x
-    <input type="number" value={displayHeightInches} on:input={onDisplayHeightInput} min="1" />"
-  </p>
 </div>
