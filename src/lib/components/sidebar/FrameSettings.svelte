@@ -31,8 +31,7 @@
   }
 
   .btn-container > button:not(.btn-chosen):hover {
-      background-color: var(--color-input-background-darken);
-      color: white;
+      background-color: var(--color-input-background);
   }
 
   .btn-chosen {
@@ -47,11 +46,12 @@
   .add-container > button {
       background-color: white;
       height: 25px;
+      border: 1px gray solid;
+      border-radius: 3px;
   }
 
   .add-container > button:hover {
-      background-color: var(--color-input-background-darken);
-      color: white;
+      background-color: var(--color-input-background);
   }
 
   .add-container > button:active {

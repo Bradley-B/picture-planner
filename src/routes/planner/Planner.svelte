@@ -3,7 +3,7 @@
       width: 100vw;
       height: 100vh;
       display: grid;
-      grid-template-columns: auto min-content;
+      grid-template-columns: auto min-content 50px;
       background-color: #534D41;
       overflow: hidden;
   }

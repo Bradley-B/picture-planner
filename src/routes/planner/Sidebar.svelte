@@ -14,41 +14,31 @@
         border: #534D41 2px solid;
         margin: 15px 0 15px 0;
     }
+
+    .import-container {
+        width: 100%;
+    }
+
+    h3 {
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
+    input[type=file] {
+        margin-left: 20px;
+        width: calc(100% - 20px);
+    }
 </style>
 
 <script>
-  import { settings, imageDetails, framesById } from './plannerStores.js';
-  import { download, generateCollectionZip, getCanvasFromBlob, getSvgForDownload } from '../../lib/exportFunctions.js';
+  import { imageDetails } from './plannerStores.js';
   import FrameSettings from '../../lib/components/sidebar/FrameSettings.svelte';
   import ImageSizeSettings from '../../lib/components/sidebar/ImageSizeSettings.svelte';
+  import ExportButtons from '../../lib/components/sidebar/ExportButtons.svelte';
 
   const onFileSelect = event => {
     imageDetails.replaceImage(event.target.files[0]);
   };
-
-  const exportImage = () => {
-    const blobUrl = getSvgForDownload();
-    getCanvasFromBlob(blobUrl, $imageDetails).then(([canvas]) => {
-      download(canvas.toDataURL($imageDetails.type), `collage.${$imageDetails.type.split('/')[1]}`, blobUrl);
-    });
-  };
-
-  const exportSvg = () => {
-    download(getSvgForDownload(), 'collage.svg');
-  }
-
-  const exportCollection = () => {
-    const blobUrl = getSvgForDownload();
-
-    getCanvasFromBlob(blobUrl, $imageDetails).then(([, sourceCanvasContext]) => {
-      return generateCollectionZip($framesById, $imageDetails, $settings, sourceCanvasContext);
-    }).then(content => {
-      URL.revokeObjectURL(blobUrl);
-      const contentUrl = URL.createObjectURL(content);
-      download(contentUrl, 'collage.zip');
-    });
-  };
-
 </script>
 
 <div id="sidebar">
@@ -56,10 +46,11 @@
   <hr />
   <ImageSizeSettings />
   <hr />
-
-  <input type="file" accept=".jpg, .jpeg, .png" on:change={onFileSelect}>
-
-  <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportSvg}>export as svg</button>
-  <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportImage}>export as image</button>
-  <button disabled={$imageDetails.src === 'default-image.jpg'} on:click={exportCollection}>export as collection</button>
+  <div class="import-container">
+    <h3>Import</h3>
+    <input type="file" accept=".jpg, .jpeg, .png" on:change={onFileSelect}>
+  </div>
+  <hr/>
+  <ExportButtons />
+  <hr />
 </div>
