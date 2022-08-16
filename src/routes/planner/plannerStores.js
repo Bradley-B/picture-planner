@@ -1,7 +1,5 @@
 import { get, writable } from 'svelte/store';
 
-export const INITIAL_PIXELS_PER_INCH = 20;
-
 // frame sizes, in inches
 export const INITIAL_FRAME_SIZES = [
   [4, 6],
@@ -14,8 +12,9 @@ const createSettingsStore = () => {
   const { set, subscribe, update } = writable({
     isMaskEnabled: false,
     frameSizes: INITIAL_FRAME_SIZES,
-    pixelsPerInch: INITIAL_PIXELS_PER_INCH,
-    frameBorderWidth: 2
+    pixelsPerInch: 20,
+    frameBorderWidth: 4,
+    frameBorderColor: '#0f9a74',
   });
 
   return {

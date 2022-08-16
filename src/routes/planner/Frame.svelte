@@ -9,7 +9,7 @@
         left: 0;
 
         cursor: grab;
-        border: solid red var(--borderWidth); /* TODO figure out if having a border negatively affects background image size calculation */
+        border: solid var(--borderColor) var(--borderWidth); /* TODO figure out if having a border negatively affects background image size calculation */
         user-select: none;
 
         z-index: var(--zIndex);
@@ -119,6 +119,7 @@
     width: width + 'px',
     height: height + 'px',
     borderWidth: $settings.frameBorderWidth + 'px',
+    borderColor: $settings.frameBorderColor,
   };
 
   $: cssVariables = Object.entries(allStyles).map(([key, value]) => `--${key}:${value}`).join(';');

@@ -1,37 +1,40 @@
-<style>
+<style type="text/scss">
   .frame-settings-container {
-      margin: 10px 0 0 10px;
+    margin: 10px 0 0 10px;
+
+    & > div {
+      margin-left: 10px;
+    }
   }
 
   button {
-      font-family: 'Roboto', sans-serif;
-      cursor: pointer;
-      border: none;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    border: none;
   }
 
   .mask-container {
-      margin-top: 10px;
-      margin-left: 10px;
-      margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .btn-container {
-      display: flex;
-      justify-content: center;
-  }
+    display: flex;
+    justify-content: center;
 
-  .btn-container > button {
+    & > button {
       margin: 0;
       width: 40px;
       height: 30px;
-  }
 
-  .btn-container > button:not(.btn-chosen):hover {
-      background-color: var(--color-input-background);
+      &:not(.btn-chosen):hover {
+        background-color: var(--color-input-background);
+      }
+    }
   }
 
   .btn-chosen {
@@ -40,33 +43,35 @@
   }
 
   .add-container {
-      margin-left: 10px;
-  }
-
-  .add-container > button {
+    & > button {
       background-color: white;
       height: 25px;
       border: 1px gray solid;
       border-radius: 3px;
+
+      &:hover {
+        background-color: var(--color-input-background);
+      }
+
+      &:active {
+        background-color: var(--color-primary);
+        color: white;
+      }
+    }
   }
 
-  .add-container > button:hover {
-      background-color: var(--color-input-background);
-  }
-
-  .add-container > button:active {
-      background-color: var(--color-primary);
-      color: white;
+  input[type=number] {
+    width: 50px;
   }
 
   select {
       height: 20px;
   }
-
 </style>
 
 <script>
   import { settings, framesById } from '../../../routes/planner/plannerStores.js';
+  import FrameBorderSettings from './FrameBorderSettings.svelte';
 
   let selectedFrameSize;
 
@@ -94,4 +99,5 @@
       {/each}
     </select>
   </div>
+  <FrameBorderSettings />
 </div>
