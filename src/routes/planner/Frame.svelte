@@ -83,22 +83,28 @@
   const onMouseDown = (mouseDownEvent) => {
     onPickup(id);
 
-    const shiftX = mouseDownEvent.clientX - left;
-    const shiftY = mouseDownEvent.clientY - top;
+    const shiftX = (mouseDownEvent.clientX || mouseDownEvent.targetTouches[0].clientX) - left;
+    const shiftY = (mouseDownEvent.clientY || mouseDownEvent.targetTouches[0].clientY) - top;
 
     const onMouseMove = (mouseMoveEvent) => {
       opacity = 0.5;
-      framesById.updateFrame({ id, left: mouseMoveEvent.pageX - shiftX, top: mouseMoveEvent.pageY - shiftY });
+      const left = (mouseMoveEvent.pageX || mouseMoveEvent.targetTouches[0].pageX) - shiftX;
+      const top = (mouseMoveEvent.pageY || mouseMoveEvent.targetTouches[0].pageY) - shiftY;
+      framesById.updateFrame({ id, left, top });
     }
 
     const onMouseUp = () => {
       opacity = 1.0;
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('touchmove', onMouseMove);
+      document.removeEventListener('touchend', onMouseUp);
     }
 
     document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('touchmove', onMouseMove)
     document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('touchend', onMouseUp);
   }
 
   const onRotateClick = () => {
@@ -132,6 +138,7 @@
     id="frame-{id}"
     style={cssVariables}
     on:mousedown={onMouseDown}
+    on:touchstart={onMouseDown}
 >
   <button on:click={onCloseClick}>x</button>
   <button on:click={onRotateClick}>⟳</button>

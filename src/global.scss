@@ -2,6 +2,12 @@
   margin: 0;
 }
 
+/* lock url bar from hiding, prevents the page shifting when moving frames on mobile */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 :root {
   --color-primary: #0f9a74;
   --color-primary-darken: #0b8d69;
