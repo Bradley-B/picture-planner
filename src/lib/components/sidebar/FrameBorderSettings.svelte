@@ -84,6 +84,29 @@
       }
     }
   }
+
+  @media only screen and (orientation: portrait) {
+    #example-frame {
+      display: none;
+    }
+    .content-wrapper {
+      display: block;
+    }
+    .color-wrapper {
+      position: static;
+    }
+    #controls-wrapper {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100%;
+      justify-content: space-around;
+    }
+    input[type=number] {
+      margin-top: 0;
+      height: 100%;
+    }
+  }
 </style>
 
 <script>
@@ -94,14 +117,14 @@
 
 <div style={styles} class="border-container">
   <h4>Style</h4>
-  <div>
-    <div>
+  <div class="content-wrapper">
+    <div id="controls-wrapper">
       <div class="color-wrapper">
         <input type="color" bind:value={$settings.frameBorderColor} />
       </div>
       <input bind:value={$settings.frameBorderWidth} min="1" max="15" type="number"/>
     </div>
-    <div class="example-frame">
+    <div class="example-frame" id="example-frame">
       <div class="circle1"></div>
       <div class="circle2"></div>
     </div>

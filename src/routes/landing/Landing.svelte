@@ -71,7 +71,7 @@
         Play around with the different settings, it's pretty cool. You can export your creation whole as an svg/image,
         or broken up into separate images according to your frames.
 
-        Now with 35% less jank 💖
+        Now with 40% less jank 💖
       </p>
       <a class="button" href="/planner">Take a look-see</a>
     </div>

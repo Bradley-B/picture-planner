@@ -7,6 +7,13 @@
       background-color: #534D41;
       overflow: hidden;
   }
+
+  @media only screen and (orientation: portrait) {
+    #planner-page {
+        grid-template-columns: auto;
+        grid-template-rows: auto min-content 60px;
+    }
+  }
 </style>
 
 <script>

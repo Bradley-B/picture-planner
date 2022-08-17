@@ -1,6 +1,6 @@
 <style>
     h3 {
-        margin: 0 0 10px 10px;
+        margin: 10px 0 10px 10px;
     }
 
     .buttons-container {
@@ -12,6 +12,7 @@
 
     button {
         font-family: 'Roboto', sans-serif;
+        white-space: nowrap;
         margin: 2px;
         cursor: pointer;
         border: 1px gray solid;
@@ -65,7 +66,7 @@
 
 <h3>Export</h3>
 <div class="buttons-container">
-  <button disabled={buttonsDisabled} on:click={exportSvg}>export as svg</button>
-  <button disabled={buttonsDisabled} on:click={exportImage}>export as image</button>
-  <button disabled={buttonsDisabled} on:click={exportCollection}>export as collection</button>
+  <button disabled={buttonsDisabled} on:click={exportSvg}>as svg</button>
+  <button disabled={buttonsDisabled} on:click={exportImage}>as image</button>
+  <button disabled={buttonsDisabled} on:click={exportCollection}>as collection</button>
 </div>

@@ -14,6 +14,18 @@
   input[type=number] {
       width: 55px;
   }
+
+  @media only screen and (orientation: portrait) {
+      h3 {
+          margin-top: 10px;
+      }
+      .image-settings-container {
+          flex-grow: 1;
+      }
+      label {
+          margin-left: 0;
+      }
+  }
 </style>
 
 <script>

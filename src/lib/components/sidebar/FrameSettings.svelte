@@ -67,6 +67,12 @@
   select {
       height: 20px;
   }
+
+  @media only screen and (orientation: portrait) {
+    .frame-settings-container {
+      margin-right: 10px;
+    }
+  }
 </style>
 
 <script>
