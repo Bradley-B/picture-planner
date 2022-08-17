@@ -23,7 +23,7 @@
 
 <script>
   import Frame from './Frame.svelte';
-  import { settings, imageDetails, framesById } from './plannerStores.js';
+  import { settings, imageDetails, framesById } from '../../plannerStores.js';
   import { onMount } from 'svelte';
   import SvgMaskRect from './SvgMaskRect.svelte';
 

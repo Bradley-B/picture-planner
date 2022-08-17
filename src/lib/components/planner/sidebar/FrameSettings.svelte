@@ -76,7 +76,7 @@
 </style>
 
 <script>
-  import { settings, framesById } from '../../../routes/planner/plannerStores.js';
+  import { settings, framesById } from '../../../plannerStores.js';
   import FrameBorderSettings from './FrameBorderSettings.svelte';
 
   let selectedFrameSize;

@@ -17,8 +17,8 @@
 </style>
 
 <script>
-  import Mat from './Mat.svelte';
-  import Sidebar from './Sidebar.svelte';
+  import Mat from '../../lib/components/planner/Mat.svelte';
+  import Sidebar from '../../lib/components/planner/sidebar/Sidebar.svelte';
 </script>
 
 <div id="planner-page">

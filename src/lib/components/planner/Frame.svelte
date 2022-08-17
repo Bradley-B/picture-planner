@@ -63,7 +63,7 @@
 </style>
 
 <script>
-  import { settings, framesById } from './plannerStores.js';
+  import { settings, framesById } from '../../plannerStores.js';
 
   let frame;
   let opacity = 1.0;

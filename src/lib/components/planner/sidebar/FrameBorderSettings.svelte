@@ -110,7 +110,7 @@
 </style>
 
 <script>
-  import { settings } from '../../../routes/planner/plannerStores.js';
+  import { settings } from '../../../plannerStores.js';
 
   $: styles = `--border-color: ${$settings.frameBorderColor}; --border-width: ${$settings.frameBorderWidth || 1}px;`;
 </script>

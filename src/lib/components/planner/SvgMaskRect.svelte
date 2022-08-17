@@ -5,7 +5,7 @@
 </style>
 
 <script>
-  import { imageDetails, settings } from './plannerStores.js';
+  import { imageDetails, settings } from '../../plannerStores.js';
 
   export let frame;
 

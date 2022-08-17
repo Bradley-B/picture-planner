@@ -61,10 +61,10 @@
 </style>
 
 <script>
-  import { imageDetails } from './plannerStores.js';
-  import FrameSettings from '../../lib/components/sidebar/FrameSettings.svelte';
-  import ImageSizeSettings from '../../lib/components/sidebar/ImageSizeSettings.svelte';
-  import ExportButtons from '../../lib/components/sidebar/ExportButtons.svelte';
+  import { imageDetails } from '../../../plannerStores.js';
+  import FrameSettings from './FrameSettings.svelte';
+  import ImageSizeSettings from './ImageSizeSettings.svelte';
+  import ExportButtons from './ExportButtons.svelte';
 
   const onFileSelect = event => {
     imageDetails.replaceImage(event.target.files[0]);

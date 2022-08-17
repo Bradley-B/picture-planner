@@ -35,8 +35,8 @@
 </style>
 
 <script>
-  import { framesById, imageDetails, settings } from '../../../routes/planner/plannerStores.js';
-  import { download, generateCollectionZip, getCanvasFromBlob, getSvgForDownload } from '../../exportFunctions.js';
+  import { framesById, imageDetails, settings } from '../../../plannerStores.js';
+  import { download, generateCollectionZip, getCanvasFromBlob, getSvgForDownload } from '../../../exportFunctions.js';
 
   $: buttonsDisabled = $imageDetails.src === 'default-image.jpg';
 

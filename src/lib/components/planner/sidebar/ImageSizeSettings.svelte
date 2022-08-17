@@ -29,7 +29,7 @@
 </style>
 
 <script>
-  import { imageDetails, settings } from '../../../routes/planner/plannerStores.js';
+  import { imageDetails, settings } from '../../../plannerStores.js';
 
   $: displayWidthInches = $imageDetails.displayBoundingBox.width / $settings.pixelsPerInch;
   $: displayHeightInches = $imageDetails.displayBoundingBox.height / $settings.pixelsPerInch;
