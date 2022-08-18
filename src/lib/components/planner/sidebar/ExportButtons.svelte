@@ -42,7 +42,7 @@
 
   const exportImage = () => {
     const blobUrl = getSvgForDownload();
-    getCanvasFromBlob(blobUrl, $imageDetails).then(([canvas]) => {
+    getCanvasFromBlob(blobUrl, $imageDetails).then(canvas => {
       download(canvas.toDataURL($imageDetails.type), `collage.${$imageDetails.type.split('/')[1]}`, blobUrl);
     });
   };
@@ -54,8 +54,8 @@
   const exportCollection = () => {
     const blobUrl = getSvgForDownload();
 
-    getCanvasFromBlob(blobUrl, $imageDetails).then(([, sourceCanvasContext]) => {
-      return generateCollectionZip($framesById, $imageDetails, $settings, sourceCanvasContext);
+    getCanvasFromBlob(blobUrl, $imageDetails).then(sourceCanvas => {
+      return generateCollectionZip($framesById, $imageDetails, $settings, sourceCanvas);
     }).then(content => {
       URL.revokeObjectURL(blobUrl);
       const contentUrl = URL.createObjectURL(content);

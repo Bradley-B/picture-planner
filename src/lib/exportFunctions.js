@@ -41,15 +41,17 @@ export const getCanvasFromBlob = (blobUrl, imageDetails) => {
         context.fillRect(0, 0, imageDetails.sourceWidth, imageDetails.sourceHeight);
       }
       context.drawImage(image, 0, 0, imageDetails.sourceWidth, imageDetails.sourceHeight);
-      resolve([canvas, context]);
+      resolve(canvas);
     };
     image.src = blobUrl;
   });
 };
 
-export const generateCollectionZip = (framesById, imageDetails, settings, sourceCanvasContext) => {
+export const generateCollectionZip = (framesById, imageDetails, settings, sourceCanvas) => {
+  const sourceCanvasContext = sourceCanvas.getContext('2d');
   const destinationCanvas = document.createElement('canvas');
   const destinationCanvasContext = destinationCanvas.getContext('2d');
+
   const jsZip = new JSZip();
   const imagesFolder = jsZip.folder('collage-images');
 
@@ -72,5 +74,12 @@ export const generateCollectionZip = (framesById, imageDetails, settings, source
       { base64: true }
     );
   }
+
+  jsZip.file(
+    `collage.${imageDetails.type.split('/')[1]}`,
+    getBase64String(sourceCanvas.toDataURL(imageDetails.type)),
+    { base64: true }
+  );
+
   return jsZip.generateAsync({ type: 'blob' });
 };
